@@ -1,6 +1,6 @@
 **container**
 
-***Terminal***
+**Terminal**
 mkdir container
 cd container
 npx create-react-app . --template typescript
@@ -8,5 +8,5 @@ yarn add -D  react-app-rewired customize-cra
 touch config-overrides.js
 
 
-***Steps***
+**Steps**
 index.js clean up

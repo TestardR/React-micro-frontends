@@ -6,28 +6,36 @@ import url from 'url';
 import useFetch from './../../hooks/useFetch';
 
 /**
- * Factory function to create script tags to load micro front-end components inside container.
+ * Micro front-end functional component. Its goal is to produce scripts from props to load external components.
  * @function MicroFrontend
  * @param {object} props - name and host from micro front-end components
  * @returns WIP
  */
 
 interface IProps {
+  history: any;
   name: string;
-  host: string;
+  host?: string;
 }
 
 const MicroFrontend: React.FC<IProps> = ({ name, host }) => {
   const { data, loading, error } = useFetch(`${host}/asset-manifest.json`);
   useEffect(() => {
-    if (data) {
+    if (data && host) {
       const { entrypoints } = data;
       _loadExternalResources(host, entrypoints);
     }
-  }, [data, loading, error]);
+  }, [data, loading, error, host]);
+
+/**
+ * Factory function to create script tags.
+ * @function _loadExternalResource
+ * @param {string} url - host url from which the bundle will be downloaded
+ * @param {string} entry - bundle location in the host 
+ * @returns a script tag
+ */
 
   function _loadExternalResource(url: string, entry: string) {
-    console.log(`${url}/${entry}`)
     return new Promise((resolve, reject) => {
       const match = entry.match(/\.([^.]+)$/);
       if (!match) return;
@@ -62,6 +70,14 @@ const MicroFrontend: React.FC<IProps> = ({ name, host }) => {
       }
     });
   }
+
+  /**
+ * Factory function initializing a script for each chunk produced by webpack.
+ * @function _loadExternalResources
+ * @param {string} url - host url from which the bundle will be downloaded
+ * @param {array} entries - array of entries obtained from asset-manifest.json 
+ * @returns an array of promises
+ */
 
   function _loadExternalResources(url: string, entries: string[]) {
     const promises = entries.map(entry => _loadExternalResource(url, entry));

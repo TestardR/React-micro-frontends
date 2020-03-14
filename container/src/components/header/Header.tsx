@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import './AppHeader.css';
+import './Header.css';
 
-const AppHeader: React.FC = () => (
+const Header: React.FC = () => (
   <header>
     <div className="center-column">
       <h1>🍽 Feed me</h1>
@@ -24,4 +24,4 @@ const AppHeader: React.FC = () => (
   </header>
 );
 
-export default AppHeader;
+export default Header;

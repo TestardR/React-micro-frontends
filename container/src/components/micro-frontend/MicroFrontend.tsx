@@ -27,6 +27,8 @@ const MicroFrontend: React.FC<IProps> = props => {
       return;
     }
 
+    
+
     axios.get(`${host}/asset-manifest.json`)
     .then(res => res.data)
     .then(manifest => {

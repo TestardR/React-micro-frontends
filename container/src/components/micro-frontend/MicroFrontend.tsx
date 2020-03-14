@@ -18,24 +18,30 @@ interface IProps {
   host?: string;
 }
 
-const MicroFrontend: React.FC<IProps> = ({ name, host }) => {
+declare global {
+  interface Window {
+    [key: string]: (str: string, history: any) => any;
+  }
+}
+
+const MicroFrontend: React.FC<IProps> = ({ name, host, history }) => {
   const { data, loading, error } = useFetch(`${host}/asset-manifest.json`);
   useEffect(() => {
     if (data && host) {
       const { entrypoints } = data;
       _loadExternalResources(host, entrypoints);
     }
-  }, [data, loading, error, host]);
+  }, [data, host]);
 
-/**
- * Factory function to create script tags.
- * @function _loadExternalResource
- * @param {string} url - host url from which the bundle will be downloaded
- * @param {string} entry - bundle location in the host 
- * @returns a script tag
- */
+  /**
+   * Factory function to create script tags.
+   * @function _loadExternalResource
+   * @param {string} url - host url from which the bundle will be downloaded
+   * @param {string} entry - bundle location in the host
+   * @returns a script tag
+   */
 
-  function _loadExternalResource(url: string, entry: string) {
+  const _loadExternalResource = (url: string, entry: string) => {
     return new Promise((resolve, reject) => {
       const match = entry.match(/\.([^.]+)$/);
       if (!match) return;
@@ -56,11 +62,12 @@ const MicroFrontend: React.FC<IProps> = ({ name, host }) => {
       if (tag) {
         tag.id = uuidv4();
         tag.onload = function() {
-          resolve(entry);
+          resolve();
         };
         tag.onerror = function() {
-          reject(entry);
+          reject();
         };
+
 
         if (tag.type === 'test/javascript') {
           document.getElementsByTagName('body')[0].appendChild(tag);
@@ -69,28 +76,29 @@ const MicroFrontend: React.FC<IProps> = ({ name, host }) => {
         }
       }
     });
-  }
+  };
 
   /**
- * Factory function initializing a script for each chunk produced by webpack.
- * @function _loadExternalResources
- * @param {string} url - host url from which the bundle will be downloaded
- * @param {array} entries - array of entries obtained from asset-manifest.json 
- * @returns an array of promises
- */
+   * Factory function initializing a script for each chunk produced by webpack.
+   * @function _loadExternalResources
+   * @param {string} url - host url from which the bundle will be downloaded
+   * @param {array} entries - array of entries obtained from asset-manifest.json
+   * @returns an array of promises
+   */
 
-  function _loadExternalResources(url: string, entries: string[]) {
+  const _loadExternalResources = (url: string, entries: string[]) => {
     const promises = entries.map(entry => _loadExternalResource(url, entry));
     return Promise.all(promises);
-  }
+  };
 
-  function _normalizeUrl(path: string) {
-    return url.format(url.parse(path)) 
-  }
+  const _normalizeUrl = (path: string) => {
+    return url.format(url.parse(path));
+  };
 
-  function renderMicroFrontend() {
-    console.log('hello');
-  }
+  const renderMicroFrontend = () => {
+    console.log('hello')
+    window[`render${name}`](`${name}-container`, history);
+  };
 
   return (
     <div>
@@ -100,6 +108,7 @@ const MicroFrontend: React.FC<IProps> = ({ name, host }) => {
           Sorry, we encountered an error loading your micro front-end component
         </div>
       )}
+      {data && <main id={`${name}-container`} />}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import './about.css';
+import './About.css';
 
 const About: React.FC = () => (
   <main id="about">
@@ -7,7 +7,7 @@ const About: React.FC = () => (
     <p>
       This website was originally created by{' '}
       <a href="https://twitter.com/thecamjackson">Cam Jackson</a> to demonstrate
-      just one way that micro frontends can be implemented. I, Romain Testard, have further enhanced it adding the possibility to load scripts as chuncks using webpack capability. 
+      "just one way that micro frontends can be implemented". I, Romain Testard, have further enhanced it implementing React Hooks, the possibility to load scripts as chuncks, and TypeScript. 
     </p>
     <p>
       Micro frontends is an architectural style where independently deliverable

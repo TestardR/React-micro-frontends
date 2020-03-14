@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import MicroFrontend from './components/micro-frontend/MicroFrontend';
 import Header from './components/header/Header';
+import About from './components/about/About';
 
-const {
-  REACT_APP_BROWSE_HOST: browseHost,
-  REACT_APP_RESTAURANT_HOST: restaurantHost
-} = process.env;
+const { REACT_APP_RESTAURANT_HOST: restaurantHost } = process.env;
 
 const Restaurant = ({ history }: { history: any }) => {
   return (
@@ -18,12 +16,13 @@ const Restaurant = ({ history }: { history: any }) => {
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <React.Fragment>
+      <Fragment>
         <Header />
         <Switch>
           <Route exact path="/" component={Restaurant} />
+          <Route exact path="/about" component={About} />
         </Switch>
-      </React.Fragment>
+      </Fragment>
     </BrowserRouter>
   );
 };

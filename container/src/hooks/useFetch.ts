@@ -1,28 +1,29 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-interface IProps {
-  url: string;
-}
-
-interface IData {
-  data: string;
-}
-
 interface IState {
-  data: string | null;
+  data: any;
   loading: boolean;
+  error: string | null;
 }
 
-const useFetch = ({ url }: IProps) => {
-  const [state, setState] = useState<IState>({ data: null, loading: true });
+const useFetch = (url: string) => {
+  const [state, setState] = useState<IState>({
+    data: null,
+    loading: true,
+    error: null
+  });
   useEffect(() => {
-    setState({ data: null, loading: true });
+    setState({ data: null, loading: true, error: null });
 
     const fetchData = async (url: string) => {
-      const result: IData = await axios.get(url);
-      const { data } = result;
-      setState({ data, loading: false });
+      try {
+        const result = await axios.get(url);
+        const { data } = result;
+        setState({ data, loading: false, error: null });
+      } catch (error) {
+        setState({ data: null, loading: false, error });
+      }
     };
 
     fetchData(url);

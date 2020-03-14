@@ -8,7 +8,7 @@ const { REACT_APP_BROWSE_HOST, REACT_APP_RESTAURANT_HOST } = process.env;
 const App: React.FC = () => {
   return (
     <div>
-      MicroFrontend
+      MicroFrontend Container
       <MicroFrontend name='hello' host='http://localhost:3001' />
     </div>
   );
